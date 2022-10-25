@@ -9,12 +9,32 @@ class Square {
         this.fill = fill;
     }
 
-    move() {
-        this.x += this.directionx;
-        this.y += this.directiony;
+    moveLeft() {
+        this.x -= 10;
+    }
+    moveUp() {
+        this.y -= 10;
+    }
+    moveRight() {
+        this.x += 10;
+    }
+    moveDown() {
+        this.y += 10;
     }
 
-    borderDetection(w, h) {
+    move() {
+        this.x += this.directionx
+        this.y += this.directiony
+    }
+
+    playerBorderDetection(w, h) {
+        if(this.x + this.w >= w) this.x -= 10;
+        if(this.x <= 0) this.x += 10;
+        if(this.y + this.w >= h) this.y = this.y -= 10;
+        if(this.y <= 0) this.y += 10;
+    }
+
+    ballBorderDetection(w, h) {
         if(this.x + this.w >= w) this.directionx = -this.directionx;
         if(this.x <= 0) this.directionx = -this.directionx;
         if(this.y + this.w >= h) this.directiony = -this.directiony;
