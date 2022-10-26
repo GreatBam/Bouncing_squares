@@ -1,17 +1,22 @@
+// canvas
 const c = document.getElementById("canvas");
 const ctx = c.getContext("2d");
-const posx = Math.floor(Math.random()* 5)
-const posy = Math.floor(Math.random()* 5)
+
+// set variables
 let playerScoreId = document.getElementById("player1Score");
 let computerScoreId = document.getElementById("computerScore");
-
 let playerScore = 0;
 let computerScore = 0;
+let sharp = 5;
+let posX = (Math.floor(Math.random()*5) + 2);
+let posY = (Math.floor(Math.random()*5) + 2);
 
-const player1 = new Square(ctx, 40, 20, 20, 150, "red");
-const computer = new Square(ctx, 1150, 680, 20, 150, "blue");
-const ball = new Square(ctx, 600, 350, 50, 50, colorRNG());
+// create game objects
+const player1 = new Square(ctx, 40, 20, 20, 150, 0, 0, "red");
+const computer = new Square(ctx, 1150, 680, 20, 150, 0, 0, "blue");
+let ball = new Square(ctx, 600, 350, 50, 50, -posX, -posY, colorRNG());
 
+// random ball color
 function colorRNG() {
     let letter = "0123456789abcdef";
     let color = "#";
@@ -21,16 +26,27 @@ function colorRNG() {
     return color;
 }
 
+// screen refresh
 function clear () {
+    // background
     ctx.beginPath();
+    ctx.lineWidth = 5;
     ctx.rect(0, 0, 1200, 700);
     ctx.fillStyle = "white";
     ctx.strokeStyle = "black";
     ctx.fill();
     ctx.stroke();
 
+    // mid line
+    ctx.beginPath();
+    ctx.rect(600, 0, 20, 700);
+    ctx.fillStyle = "black";
+    ctx.strokeStyle = "black";
+    ctx.fill();
+    ctx.stroke();
 }
 
+// player 1 command
 function player1Move(e) {
     switch(e.keyCode) {
         // case 37:
@@ -48,77 +64,83 @@ function player1Move(e) {
     }   
 }
 
-function computerMove(e) {
-    switch(e.keyCode) {
-        // case 65:
-        // computer.moveLeft();
-        // break;
-        case 87:
-        computer.moveUp();
-        break;
-        // case 68:
-        // computer.moveRight();
-        // break;
-        case 83:
-        computer.moveDown();
-        break;  
-    }   
-}
+// player 2 command
+// function player2Move(e) {
+//     switch(e.keyCode) {
+//         case 65:
+//         computer.moveLeft();
+//         break;
+//         case 87:
+//         computer.moveUp();
+//         break;
+//         case 68:
+//         computer.moveRight();
+//         break;
+//         case 83:
+//         computer.moveDown();
+//         break;  
+//     }   
+// }
 
+// ball collision detection
 function ballCollision() {
     if((ball.x + ball.w) > player1.x &&
         ball.x < (player1.x + player1.w) &&
         (ball.y + ball.h) > player1.y &&
-        ball.y < (player1.y + player1.h))
+        ball.y < (player1.y + player1.h)) {
         ball.directionx = ball.directionx * -1;
-    // if((ball.y + ball.h) > player1.y &&
-    //     ball.y < (player1.y + player1.h) &&
-    //     (ball.x + ball.h) > player1.x &&
-    //     ball.x < (player1.x + player1.w))
-    //     ball.directiony = ball.directiony;
+        ball.posX += 0.6;
+        ball.posY += 0.6;
+    }
     if((ball.x + ball.w) > computer.x &&
         (ball.y + ball.h) > computer.y &&
         ball.x < (computer.x + computer.w) &&
-        ball.y < (computer.y + computer.h))
+        ball.y < (computer.y + computer.h)) {
         ball.directionx = ball.directionx * -1;
-    // if((ball.y + ball.h) > computer.y &&
-    //     (ball.x + ball.h) > computer.x &&
-    //     ball.y < (computer.y + computer.h) &&
-    //     ball.x < (computer.x + computer.w))
-    //     ball.directiony = ball.directiony * -1;
+        ball.posX += 0.6;
+        ball.posY += 0.6;
+        sharp -= 1;
+    }
 }
 
+// computer ball tracking
 function ballTracker() {
-    if((computer.y + 2) > (ball.y + ball.h)) computer.y -= 8;
-    if(((computer.y + computer.h) - 2) < ball.y) computer.y += 8;
+    if((computer.y + sharp) > (ball.y + ball.h)) computer.y -= 8;
+    if(((computer.y + computer.h) - sharp) < ball.y) computer.y += 8;
 }
 
+// score
 function goal(width) {
+    posX = (Math.floor(Math.random()*5) + 2);
+    posY = (Math.floor(Math.random()*5) + 2);
     if((ball.x + ball.w) >= width) {
-        ball.x = 600;
-        ball.y = 350;
+        ball = new Square(ctx, 600, 350, 50, 50, -posX, -posY, colorRNG());
         playerScore += 1;
+        sharp = 5;
     }
     if(ball.x <= 0) {
-        ball.x = 600;
-        ball.y = 350;
+        ball = new Square(ctx, 600, 350, 50, 50, posX, posY, colorRNG());
         computerScore += 1;
+        sharp = 5;
     }
 }
-    
+
 // create multiple squares at once
 // const squares = [
 //     new Square(ctx, 30, 30, 50, 50, colorRNG()),
 //     new Square(ctx, 30, 30, 50, 50, colorRNG()),
 //     new Square(ctx, 30, 30, 50, 50, colorRNG())
 // ]
-            
+       
+// game loop
 setInterval(() => {
     clear();
+    playerScoreId.style.color = "red";
+    computerScoreId.style.color = "blue";
     playerScoreId.innerHTML = playerScore;
     computerScoreId.innerHTML = computerScore;
     window.addEventListener("keydown", player1Move, false);
-    window.addEventListener("keydown", computerMove, false);
+    // window.addEventListener("keydown", player2Move, false);
     player1.draw();
     computer.draw();
     ball.draw();

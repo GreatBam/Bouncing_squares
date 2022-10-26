@@ -1,12 +1,12 @@
 class Square {
-    constructor(ctx, x, y, w, h, fill) {
+    constructor(ctx, x, y, w, h, directionx, directiony, fill) {
         this.ctx = ctx;
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
-        this.directionx = 5;
-        this.directiony = 5;
+        this.directionx = directionx;
+        this.directiony = directiony;
         this.fill = fill;
     }
 
@@ -36,8 +36,8 @@ class Square {
     }
 
     ballBorderDetection(w, h) {
-        // if(this.x + this.w >= w) this.directionx = -this.directionx;
-        // if(this.x <= 0) this.directionx = -this.directionx;
+        if(this.x + this.w >= w) this.directionx = -this.directionx;
+        if(this.x <= 0) this.directionx = -this.directionx;
         if(this.y + this.h >= h) this.directiony = -this.directiony;
         if(this.y <= 0) this.directiony = -this.directiony;
     }
