@@ -89,20 +89,20 @@ function ballCollision() {
 }
 
 function ballTracker() {
-    if(computer.y > (ball.y + ball.h)) computer.y -= 10;
-    if((computer.y + computer.h) < ball.y) computer.y += 10;
+    if((computer.y + 2) > (ball.y + ball.h)) computer.y -= 8;
+    if(((computer.y + computer.h) - 2) < ball.y) computer.y += 8;
 }
 
 function goal(width) {
     if((ball.x + ball.w) >= width) {
         ball.x = 600;
         ball.y = 350;
-        computerScore += 1;
+        playerScore += 1;
     }
     if(ball.x <= 0) {
         ball.x = 600;
         ball.y = 350;
-        playerScore += 1;
+        computerScore += 1;
     }
 }
     
