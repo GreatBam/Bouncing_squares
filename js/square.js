@@ -36,8 +36,8 @@ class Square {
     }
 
     ballBorderDetection(w, h) {
-        if(this.x + this.w >= w) this.directionx = -this.directionx;
-        if(this.x <= 0) this.directionx = -this.directionx;
+        // if(this.x + this.w >= w) this.directionx = -this.directionx;
+        // if(this.x <= 0) this.directionx = -this.directionx;
         if(this.y + this.h >= h) this.directiony = -this.directiony;
         if(this.y <= 0) this.directiony = -this.directiony;
     }

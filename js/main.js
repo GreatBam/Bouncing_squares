@@ -93,16 +93,19 @@ function ballTracker() {
     if((computer.y + computer.h) < ball.y) computer.y += 10;
 }
 
-function goal(w) {
-    if((ball.x + ball.w) >= w)
-        ball.draw();
+function goal(width) {
+    if((ball.x + ball.w) >= width) {
+        ball.x = 600;
+        ball.y = 350;
         computerScore += 1;
-    if(ball.x <= 0)
-        ball.draw();
+    }
+    if(ball.x <= 0) {
+        ball.x = 600;
+        ball.y = 350;
         playerScore += 1;
+    }
 }
     
-
 // create multiple squares at once
 // const squares = [
 //     new Square(ctx, 30, 30, 50, 50, colorRNG()),
