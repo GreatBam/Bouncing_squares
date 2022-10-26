@@ -2,6 +2,15 @@ const c = document.getElementById("canvas");
 const ctx = c.getContext("2d");
 const posx = Math.floor(Math.random()* 5)
 const posy = Math.floor(Math.random()* 5)
+let playerScoreId = document.getElementById("player1Score");
+let computerScoreId = document.getElementById("computerScore");
+
+let playerScore = 0;
+let computerScore = 0;
+
+const player1 = new Square(ctx, 40, 20, 20, 150, "red");
+const computer = new Square(ctx, 1150, 680, 20, 150, "blue");
+const ball = new Square(ctx, 600, 350, 50, 50, colorRNG());
 
 function colorRNG() {
     let letter = "0123456789abcdef";
@@ -24,64 +33,75 @@ function clear () {
 
 function player1Move(e) {
     switch(e.keyCode) {
-        case 37:
-        player1.moveLeft()
-        break;
+        // case 37:
+        // player1.moveLeft();
+        // break;
         case 38:
-        player1.moveUp()
+        player1.moveUp();
         break;
-        case 39:
-        player1.moveRight()
-        break;
+        // case 39:
+        // player1.moveRight();
+        // break;
         case 40:
-        player1.moveDown()
+        player1.moveDown();
         break;  
     }   
 }
 
-function player2Move(e) {
+function computerMove(e) {
     switch(e.keyCode) {
         // case 65:
-        // player2.moveLeft()
+        // computer.moveLeft();
         // break;
         case 87:
-        player2.moveUp()
+        computer.moveUp();
         break;
         // case 68:
-        // player2.moveRight()
+        // computer.moveRight();
         // break;
         case 83:
-        player2.moveDown()
+        computer.moveDown();
         break;  
     }   
 }
 
 function ballCollision() {
-    if((ball.x + ball.w) >= player1.x &&
-        (ball.y + ball.h) >= player1.y &&
-        ball.x <= (player1.x + player1.w) &&
-        ball.y <= (player1.y + player1.h))
+    if((ball.x + ball.w) > player1.x &&
+        ball.x < (player1.x + player1.w) &&
+        (ball.y + ball.h) > player1.y &&
+        ball.y < (player1.y + player1.h))
         ball.directionx = ball.directionx * -1;
-    if((ball.y + ball.h) >= player1.y &&
-        (ball.x + ball.h) >= player1.x &&
-        ball.y <= (player1.y + player1.h) &&
-        ball.x <= (player1.x + player1.w))
-        ball.directiony = ball.directiony * -1;
-    if((ball.x + ball.w) >= player2.x &&
-        (ball.y + ball.h) >= player2.y &&
-        ball.x <= (player2.x + player2.w) &&
-        ball.y <= (player2.y + player2.h))
+    // if((ball.y + ball.h) > player1.y &&
+    //     ball.y < (player1.y + player1.h) &&
+    //     (ball.x + ball.h) > player1.x &&
+    //     ball.x < (player1.x + player1.w))
+    //     ball.directiony = ball.directiony;
+    if((ball.x + ball.w) > computer.x &&
+        (ball.y + ball.h) > computer.y &&
+        ball.x < (computer.x + computer.w) &&
+        ball.y < (computer.y + computer.h))
         ball.directionx = ball.directionx * -1;
-    if((ball.y + ball.h) >= player2.y &&
-        (ball.x + ball.h) >= player2.x &&
-        ball.y <= (player2.y + player2.h) &&
-        ball.x <= (player2.x + player2.w))
-        ball.directiony = ball.directiony * -1;
+    // if((ball.y + ball.h) > computer.y &&
+    //     (ball.x + ball.h) > computer.x &&
+    //     ball.y < (computer.y + computer.h) &&
+    //     ball.x < (computer.x + computer.w))
+    //     ball.directiony = ball.directiony * -1;
+}
+
+function ballTracker() {
+    if(computer.y > (ball.y + ball.h)) computer.y -= 10;
+    if((computer.y + computer.h) < ball.y) computer.y += 10;
+}
+
+function goal(w) {
+    if((ball.x + ball.w) >= w)
+        ball.draw();
+        computerScore += 1;
+    if(ball.x <= 0)
+        ball.draw();
+        playerScore += 1;
 }
     
-const player1 = new Square(ctx, 1180, 680, 40, 150, "red")
-const player2 = new Square(ctx, 20, 20, 40, 150, "blue")
-const ball = new Square(ctx, 600, 350, 50, 50, colorRNG())
 
 // create multiple squares at once
 // const squares = [
@@ -92,21 +112,25 @@ const ball = new Square(ctx, 600, 350, 50, 50, colorRNG())
             
 setInterval(() => {
     clear();
+    playerScoreId.innerHTML = playerScore;
+    computerScoreId.innerHTML = computerScore;
     window.addEventListener("keydown", player1Move, false);
-    window.addEventListener("keydown", player2Move, false);
+    window.addEventListener("keydown", computerMove, false);
     player1.draw();
-    player2.draw();
+    computer.draw();
     ball.draw();
     ball.move();
     player1.playerBorderDetection(c.width, c.height);
-    player2.playerBorderDetection(c.width, c.height);
+    computer.playerBorderDetection(c.width, c.height);
     ball.ballBorderDetection(c.width, c.height);
     ballCollision();
+    ballTracker();
+    goal(c.width);
 
     // multiple squares for loop
     // for(let square of squares) {
     //     square.draw();
     //     square.move();
-    //     square.ballBorderDetection(c.width, c.height) 
+    //     square.ballBorderDetection(c.width, c.height);
     // }
 }, 1000/60);
