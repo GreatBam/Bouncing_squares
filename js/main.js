@@ -126,41 +126,45 @@ function goal(width) {
         // clearInterval(interval)
     }
 }
-
-// create multiple squares at once
-// const squares = [
-//     new Square(ctx, 30, 30, 50, 50, colorRNG()),
-//     new Square(ctx, 30, 30, 50, 50, colorRNG()),
-//     new Square(ctx, 30, 30, 50, 50, colorRNG())
-// ]
        
 // game loop
 const interval = setInterval(() => {
+    // refresh
     clear();
+
+    // debug
     console.log("sharp : " + sharp);
     console.log("ball dirX : " + ball.directionx);
     console.log("ball dirY : " + ball.directiony);
+
+    // score board
     playerScoreId.style.color = "blue";
-    computerScoreId.style.color = "red";
     playerScoreId.innerHTML = playerScore;
+    computerScoreId.style.color = "red";
     computerScoreId.innerHTML = computerScore;
+
+    // controls
     window.addEventListener("keydown", player1Move, false);
     // window.addEventListener("keydown", player2Move, false);
+
+    // draw elements
     player1.draw();
     computer.draw();
     ball.draw();
+
+    // moving ball
     ball.move();
+
+    // collision
     player1.playerBorderDetection(c.width, c.height);
     computer.playerBorderDetection(c.width, c.height);
     ball.ballBorderDetection(c.width, c.height);
     ballCollision();
+
+    // computer ball tracker
     ballTracker();
+
+    // goal
     goal(c.width);
 
-    // multiple squares for loop
-    // for(let square of squares) {
-    //     square.draw();
-    //     square.move();
-    //     square.ballBorderDetection(c.width, c.height);
-    // }
 }, 1000/60);
