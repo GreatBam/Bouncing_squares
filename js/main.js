@@ -89,16 +89,16 @@ function ballCollision() {
         (ball.y + ball.h) > player1.y &&
         ball.y < (player1.y + player1.h)) {
         ball.directionx = ball.directionx * -1;
-        ball.posX += 0.6;
-        ball.posY += 0.6;
+        ball.directionx += 0.5;
+        ball.directiony += 0.5;
     }
     if((ball.x + ball.w) > computer.x &&
         (ball.y + ball.h) > computer.y &&
         ball.x < (computer.x + computer.w) &&
         ball.y < (computer.y + computer.h)) {
         ball.directionx = ball.directionx * -1;
-        ball.posX += 0.6;
-        ball.posY += 0.6;
+        ball.directionx -= 0.5;
+        ball.directiony -= 0.5;
         sharp -= 1;
     }
 }
@@ -135,6 +135,9 @@ function goal(width) {
 // game loop
 setInterval(() => {
     clear();
+    console.log("sharp : " + sharp);
+    console.log("ball dirX : " + ball.directionx);
+    console.log("ball dirY : " + ball.directiony);
     playerScoreId.style.color = "red";
     computerScoreId.style.color = "blue";
     playerScoreId.innerHTML = playerScore;
