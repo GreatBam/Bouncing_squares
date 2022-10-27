@@ -12,9 +12,9 @@ let posX = (Math.floor(Math.random()*5) + 2);
 let posY = (Math.floor(Math.random()*5) + 2);
 
 // create game objects
-const player1 = new Square(ctx, 40, 20, 20, 150, 0, 0, "red");
-const computer = new Square(ctx, 1150, 680, 20, 150, 0, 0, "blue");
-let ball = new Square(ctx, 600, 350, 50, 50, -posX, -posY, colorRNG());
+const player1 = new Square(ctx, 40, 20, 20, 150, 0, 0, "blue");
+const computer = new Square(ctx, 1150, 680, 20, 150, 0, 0, "red");
+let ball = new Ball(ctx, 600, 350, 30, posX, posY, colorRNG());
 
 // random ball color
 function colorRNG() {
@@ -84,18 +84,18 @@ function player1Move(e) {
 
 // ball collision detection
 function ballCollision() {
-    if((ball.x + ball.w) > player1.x &&
-        ball.x < (player1.x + player1.w) &&
-        (ball.y + ball.h) > player1.y &&
-        ball.y < (player1.y + player1.h)) {
+    if((ball.x + ball.r) > player1.x &&
+        (ball.x - ball.r) < (player1.x + player1.w) &&
+        (ball.y + ball.r) > player1.y &&
+        (ball.y - ball.r) < (player1.y + player1.h)) {
         ball.directionx = ball.directionx * -1;
         ball.directionx += 0.5;
         ball.directiony += 0.5;
     }
-    if((ball.x + ball.w) > computer.x &&
-        (ball.y + ball.h) > computer.y &&
-        ball.x < (computer.x + computer.w) &&
-        ball.y < (computer.y + computer.h)) {
+    if((ball.x + ball.r) > computer.x &&
+        (ball.x - ball.r) < (computer.x + computer.w) &&
+        (ball.y + ball.r) > computer.y &&
+        (ball.y - ball.r) < (computer.y + computer.h)) {
         ball.directionx = ball.directionx * -1;
         ball.directionx -= 0.5;
         ball.directiony -= 0.5;
@@ -105,7 +105,7 @@ function ballCollision() {
 
 // computer ball tracking
 function ballTracker() {
-    if((computer.y + sharp) > (ball.y + ball.h)) computer.y -= 8;
+    if((computer.y + sharp) > (ball.y + ball.r)) computer.y -= 8;
     if(((computer.y + computer.h) - sharp) < ball.y) computer.y += 8;
 }
 
@@ -113,15 +113,17 @@ function ballTracker() {
 function goal(width) {
     posX = (Math.floor(Math.random()*5) + 2);
     posY = (Math.floor(Math.random()*5) + 2);
-    if((ball.x + ball.w) >= width) {
-        ball = new Square(ctx, 600, 350, 50, 50, -posX, -posY, colorRNG());
+    if((ball.x + ball.r) >= (width + 10)) {
+        ball = new Ball(ctx, 600, 350, 30, -posX, -posY, colorRNG());
         playerScore += 1;
         sharp = 5;
+        // clearInterval(interval)
     }
-    if(ball.x <= 0) {
-        ball = new Square(ctx, 600, 350, 50, 50, posX, posY, colorRNG());
+    if((ball.x - ball.r) <= (0 - 10)) {
+        ball = new Ball(ctx, 600, 350, 30, posX, posY, colorRNG());
         computerScore += 1;
         sharp = 5;
+        // clearInterval(interval)
     }
 }
 
@@ -133,13 +135,13 @@ function goal(width) {
 // ]
        
 // game loop
-setInterval(() => {
+const interval = setInterval(() => {
     clear();
     console.log("sharp : " + sharp);
     console.log("ball dirX : " + ball.directionx);
     console.log("ball dirY : " + ball.directiony);
-    playerScoreId.style.color = "red";
-    computerScoreId.style.color = "blue";
+    playerScoreId.style.color = "blue";
+    computerScoreId.style.color = "red";
     playerScoreId.innerHTML = playerScore;
     computerScoreId.innerHTML = computerScore;
     window.addEventListener("keydown", player1Move, false);
