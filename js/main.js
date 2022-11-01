@@ -7,14 +7,14 @@ let playerScoreId = document.getElementById("player1Score");
 let computerScoreId = document.getElementById("computerScore");
 let playerScore = 0;
 let computerScore = 0;
-let sharp = 5;
+let sharp = 10;
 let posX = (Math.floor(Math.random()*5) + 2);
 let posY = (Math.floor(Math.random()*5) + 2);
 
 // create game objects
 const player1 = new Square(ctx, 40, 20, 20, 150, 0, 0, "blue");
 const computer = new Square(ctx, 1150, 680, 20, 150, 0, 0, "red");
-let ball = new Ball(ctx, 600, 350, 30, posX, posY, colorRNG());
+let ball = new Ball(ctx, 600, 350, 10, posX, posY, colorRNG());
 
 // random ball color
 function colorRNG() {
@@ -114,15 +114,15 @@ function goal(width) {
     posX = (Math.floor(Math.random()*5) + 2);
     posY = (Math.floor(Math.random()*5) + 2);
     if((ball.x + ball.r) >= (width + 10)) {
-        ball = new Ball(ctx, 600, 350, 30, -posX, -posY, colorRNG());
+        ball = new Ball(ctx, 600, 350, 10, -posX, -posY, colorRNG());
         playerScore += 1;
-        sharp = 5;
+        sharp = 10;
         // clearInterval(interval)
     }
     if((ball.x - ball.r) <= (0 - 10)) {
-        ball = new Ball(ctx, 600, 350, 30, posX, posY, colorRNG());
+        ball = new Ball(ctx, 600, 350, 10, posX, posY, colorRNG());
         computerScore += 1;
-        sharp = 5;
+        sharp = 10;
         // clearInterval(interval)
     }
 }
